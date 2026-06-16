@@ -1,0 +1,34 @@
+<Solution>
+  <Folder Name="/docker/">
+    <File Path="docker/docker-compose.yml" />
+  </Folder>
+  <Folder Name="/shared/">
+    <Project Path="shared/BuildingBlocks/BuildingBlocks.csproj" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/ApiGateway/">
+    <Project Path="src/ApiGateway/ApiGateway.Api/ApiGateway.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/AuthService/">
+    <Project Path="src/AuthService/AuthService.Api/AuthService.Api.csproj" />
+    <Project Path="src/AuthService/AuthService.Application/AuthService.Application.csproj" />
+    <Project Path="src/AuthService/AuthService.Domain/AuthService.Domain.csproj" />
+    <Project Path="src/AuthService/AuthService.Infrastructure/AuthService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/OrderService/">
+    <Project Path="src/OrderService/OrderService.Api/OrderService.Api.csproj" />
+    <Project Path="src/OrderService/OrderService.Application/OrderService.Application.csproj" />
+    <Project Path="src/OrderService/OrderService.Domain/OrderService.Domain.csproj" />
+    <Project Path="src/OrderService/OrderService.Infrastructure/OrderService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/UserService/">
+    <Project Path="src/UserService/UserService.Api/UserService.Api.csproj" />
+    <Project Path="src/UserService/UserService.Application/UserService.Application.csproj" />
+    <Project Path="src/UserService/UserService.Domain/UserService.Domain.csproj" />
+    <Project Path="src/UserService/UserService.Infrastructure/UserService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AuthService.Tests/AuthService.Tests.csproj" />
+    <Project Path="tests/UserService.Tests/UserService.Tests.csproj" />
+  </Folder>
+</Solution>
