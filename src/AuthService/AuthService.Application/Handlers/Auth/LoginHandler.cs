@@ -1,7 +1,9 @@
 ﻿using AuthService.Application.Commands.Auth.Login;
+using AuthService.Application.Common.Security;
 using AuthService.Application.DTOs.Auth;
 using AuthService.Application.Interfaces;
 using AuthService.Domain.Entities;
+using AuthService.Domain.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -10,18 +12,27 @@ namespace AuthService.Application.Handlers.Auth
 {
     public class LoginHandler : IRequestHandler<LoginCommand, LoginResponse>
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IJwtService _jwtService;
-
+        private readonly ILoginSessionRepository _loginSessionRepository;
+        private readonly IEmailService _emailService;
         public LoginHandler(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            IJwtService jwtService)
+            IJwtService jwtService,
+            ILoginSessionRepository loginSessionRepository,
+            IUnitOfWork unitOfWork,
+            IEmailService emailService
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtService = jwtService;
+            _loginSessionRepository = loginSessionRepository;
+            _unitOfWork = unitOfWork;
+            _emailService = emailService;
         }
 
         public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -36,13 +47,41 @@ namespace AuthService.Application.Handlers.Auth
 
             if (!result.Succeeded)
                 throw new Exception("Invalid password");
+            // Sinh OTP
+            var otp = OtpGenerator.Generate();
+            var session = new LoginSession
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                SessionId = Guid.NewGuid().ToString(),
+                Otp = OtpGenerator.Hash(otp),
+                CreatedAt = DateTime.UtcNow,
+                ExpiredAt = DateTime.UtcNow.AddMinutes(5),
+                IsVerified = false,
+                AttemptCount = 0
+            };
+           
 
-            var token = _jwtService.CreateToken(user);
-
+            await _unitOfWork.BeginTransactionAsync(cancellationToken);
+            try
+            {
+                await _loginSessionRepository.AddAsync(session, cancellationToken);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+                await _unitOfWork.CommitTransactionAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+                throw;
+            }
+            // var token = _jwtService.CreateToken(user);
+            await _emailService.SendOtpAsync(
+                            user.Email!,
+                            otp,
+                            cancellationToken);
             return new LoginResponse
             {
-                Email = user.Email,
-                Token = token
+                SessionId = session.Id,
             };
         }
     }

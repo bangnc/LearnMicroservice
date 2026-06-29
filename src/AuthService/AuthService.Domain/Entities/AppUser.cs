@@ -9,5 +9,8 @@ namespace AuthService.Domain.Entities
         public bool IsActive { get; set; } = true;
         // 👉 FK tới Unit
         public Guid? UnitId { get; set; }
+
+        public virtual ICollection<LoginSession> LoginSessions { get; set; }
+        = new List<LoginSession>();
     }
 }

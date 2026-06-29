@@ -4,6 +4,7 @@ using AuthService.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AuthService.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260628142338_Add_LoginSession")]
+    partial class Add_LoginSession
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,8 +124,8 @@ namespace AuthService.Infrastructure.Migrations
 
                     b.Property<string>("Otp")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("SessionId")
                         .IsRequired()
@@ -146,7 +149,7 @@ namespace AuthService.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("LoginSessions");
+                    b.ToTable("LoginSession");
                 });
 
             modelBuilder.Entity("AuthService.Domain.Entities.Unit", b =>

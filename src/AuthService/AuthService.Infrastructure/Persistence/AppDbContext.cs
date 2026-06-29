@@ -1,4 +1,5 @@
 ﻿using AuthService.Domain.Entities;
+using AuthService.Infrastructure.Persistence.Configurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,28 +12,15 @@ namespace AuthService.Infrastructure.Persistence
         {
         }
         public DbSet<Unit> Units { get; set; }
+        public DbSet<LoginSession> LoginSessions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Unit>(entity =>
-            {
-                entity.HasKey(x => x.Id);
+            builder.ApplyConfiguration(new UnitConfiguration());
+            builder.ApplyConfiguration(new LoginSessionConfiguration());
 
-                entity.Property(x => x.Code)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(x => x.Name)
-                    .IsRequired()
-                    .HasMaxLength(200);
-            });
-            builder.Entity<Unit>()
-                    .HasMany(x => x.Users)
-                    .WithOne()
-                    .HasForeignKey(x => x.UnitId)
-                    .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

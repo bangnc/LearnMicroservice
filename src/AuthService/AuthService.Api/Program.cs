@@ -33,7 +33,22 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddControllers(); // 👈 thiếu cái này
 
+var allowedOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Vue", policy =>
+    {
+        policy.WithOrigins(allowedOrigins!)
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); // nếu dùng cookie
+    });
+});
+
 var app = builder.Build();
+app.UseCors("Vue");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
