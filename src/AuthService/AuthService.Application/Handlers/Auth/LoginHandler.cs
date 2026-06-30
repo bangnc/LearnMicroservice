@@ -74,14 +74,15 @@ namespace AuthService.Application.Handlers.Auth
                 await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                 throw;
             }
-            // var token = _jwtService.CreateToken(user);
+            var token = _jwtService.CreateTempToken(user, session.SessionId);
             await _emailService.SendOtpAsync(
                             user.Email!,
                             otp,
                             cancellationToken);
             return new LoginResponse
             {
-                SessionId = session.Id,
+                RequiresOtp = true,
+               TokenTemp = token
             };
         }
     }

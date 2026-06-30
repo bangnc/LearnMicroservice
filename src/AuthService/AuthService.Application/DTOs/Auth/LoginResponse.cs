@@ -9,6 +9,7 @@ namespace AuthService.Application.DTOs.Auth
     public class LoginResponse
     {
         public string Token { get; set; }
+        public string TokenTemp { get; set; }
         public string Email { get; set; }
         public bool RequiresOtp { get; set; }
         public Guid SessionId { get; set; }

@@ -4,6 +4,7 @@ using AuthService.Application.DTOs;
 using MediatR;
 using AuthService.Application.Commands.Auth.Login;
 using AuthService.Application.Commands.Auth.Register;
+using AuthService.Application.Commands.Auth.VerifyOtp;
 
 namespace AuthService.Api.Controllers
 {
@@ -27,6 +28,13 @@ namespace AuthService.Api.Controllers
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterCommand request)
+        {
+            var result = await _mediator.Send(request);
+            return Ok(result);
+        }
+
+        [HttpPost("verify-otp")]
+        public async Task<IActionResult> VerifyOtp(VerifyOtpCommand request)
         {
             var result = await _mediator.Send(request);
             return Ok(result);
