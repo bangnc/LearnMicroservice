@@ -15,7 +15,7 @@ namespace AuthService.Application
             {
                 cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
             });
-
+            services.AddAutoMapper(typeof(ApplicationAssemblyMarker).Assembly);
             return services;
         }
     }

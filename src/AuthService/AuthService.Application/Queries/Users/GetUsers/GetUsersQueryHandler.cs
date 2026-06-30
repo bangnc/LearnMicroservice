@@ -1,4 +1,8 @@
-﻿using AuthService.Domain.Entities;
+﻿using AuthService.Application.DTOs.Page;
+using AuthService.Application.Extensions;
+using AuthService.Domain.Entities;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -6,31 +10,39 @@ using Microsoft.EntityFrameworkCore;
 namespace AuthService.Application.Queries.Users.GetUsers
 {
     public class GetUsersQueryHandler
-    : IRequestHandler<GetUsersQuery, List<UserDto>>
+    : IRequestHandler<GetUsersQuery, PageResponse<UserDto>>
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly IConfigurationProvider _mapperConfig;
 
-        public GetUsersQueryHandler(UserManager<AppUser> userManager)
+        public GetUsersQueryHandler(UserManager<AppUser> userManager, IConfigurationProvider mapperConfig)
         {
             _userManager = userManager;
+            _mapperConfig = mapperConfig;
         }
 
-        public async Task<List<UserDto>> Handle(
-            GetUsersQuery request,
-            CancellationToken cancellationToken)
+        public async Task<PageResponse<UserDto>> Handle(
+        GetUsersQuery request,
+        CancellationToken cancellationToken)
         {
-            return await _userManager.Users
-                .AsNoTracking()
-                .OrderBy(x => x.UserName)
-                .Select(x => new UserDto
-                {
-                    Id = x.Id,
-                    UserName = x.UserName!,
-                    Email = x.Email!,
-                    FullName = x.FullName,
-                    IsActive = x.IsActive,                    
-                })
-                .ToListAsync(cancellationToken);
+            var query = _userManager.Users.AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(request.Search))
+            {
+                query = query.Where(x =>
+                    x.UserName!.Contains(request.Search)
+                    || x.Email!.Contains(request.Search)
+                    || x.FullName!.Contains(request.Search));
+            }
+
+            query = query.OrderByProperty(
+                request.SortBy ?? nameof(AppUser.UserName),
+                request.Desc);
+
+            return await query
+
+                .ProjectTo<UserDto>(_mapperConfig)
+                .ToPagedResultAsync(request, cancellationToken);
         }
     }
 }
