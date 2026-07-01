@@ -1,4 +1,6 @@
 ﻿using AuthService.Application.Commands.Auth.Login;
+using AuthService.Application.Common.Events;
+using AuthService.Application.Common.Messaging;
 using AuthService.Application.Common.Security;
 using AuthService.Application.DTOs.Auth;
 using AuthService.Application.Interfaces;
@@ -17,22 +19,24 @@ namespace AuthService.Application.Handlers.Auth
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IJwtService _jwtService;
         private readonly ILoginSessionRepository _loginSessionRepository;
-        private readonly IEmailService _emailService;
+       // private readonly IEmailService _emailService;
+        //private readonly IKafkaProducer _kafkaProducer;
+        private readonly IEventBus _eventBus;
         public LoginHandler(
-            UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager,
-            IJwtService jwtService,
-            ILoginSessionRepository loginSessionRepository,
-            IUnitOfWork unitOfWork,
-            IEmailService emailService
-            )
+             UserManager<AppUser> userManager,
+             SignInManager<AppUser> signInManager,
+             IJwtService jwtService,
+             ILoginSessionRepository loginSessionRepository,
+             IUnitOfWork unitOfWork,
+             IEventBus eventBus
+             )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtService = jwtService;
             _loginSessionRepository = loginSessionRepository;
             _unitOfWork = unitOfWork;
-            _emailService = emailService;
+            _eventBus = eventBus;
         }
 
         public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -75,10 +79,21 @@ namespace AuthService.Application.Handlers.Auth
                 throw;
             }
             var token = _jwtService.CreateTempToken(user, session.SessionId);
-            await _emailService.SendOtpAsync(
-                            user.Email!,
-                            otp,
-                            cancellationToken);
+            await _eventBus.PublishAsync(
+            KafkaTopics.SendOtp,
+            new SendOtpEmailIntegrationEvent
+            {
+                Email = user.Email!,
+                FullName = user.FullName ?? "",
+                Otp = otp
+            },
+            cancellationToken);
+
+
+            //await _emailService.SendOtpAsync(
+            //                user.Email!,
+            //                otp,
+            //                cancellationToken);
             return new LoginResponse
             {
                 RequiresOtp = true,

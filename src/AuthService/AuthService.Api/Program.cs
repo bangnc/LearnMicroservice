@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
+Console.WriteLine("After builder.Build()");
 
 // DB
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -61,5 +61,5 @@ app.UseHttpsRedirection();
 app.UseAuthentication();   // 👈 thêm
 app.UseAuthorization();    // 👈 thêm
 app.MapControllers();
-
+Console.WriteLine("Before app.Run()");
 app.Run();

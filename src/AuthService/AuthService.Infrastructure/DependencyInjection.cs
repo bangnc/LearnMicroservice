@@ -1,6 +1,10 @@
-﻿using AuthService.Application.Interfaces;
+﻿using AuthService.Application.Common.Messaging;
+using AuthService.Application.Interfaces;
 using AuthService.Application.Services;
 using AuthService.Domain.Interfaces;
+using AuthService.Infrastructure.Messaging.Consumers;
+using AuthService.Infrastructure.Messaging.EventBus;
+using AuthService.Infrastructure.Messaging.Handlers;
 using AuthService.Infrastructure.Persistence;
 using AuthService.Infrastructure.Persistence.Configurations;
 using AuthService.Infrastructure.Repositories;
@@ -24,7 +28,17 @@ namespace AuthService.Infrastructure
             services.Configure<EmailSettings>(
                 configuration.GetSection("EmailSettings"));
 
+            services.Configure<KafkaSettings>(
+               configuration.GetSection("Kafka"));
+
             services.AddScoped<IEmailService, EmailService>();
+            // Kafka
+
+            services.AddSingleton<IEventBus, KafkaEventBus>();
+
+            services.AddScoped<SendOtpHandler>();
+
+            services.AddHostedService<SendOtpConsumer>();
 
             // Repositories
             services.AddScoped<ILoginSessionRepository, LoginSessionRepository>();
