@@ -1,10 +1,12 @@
 ﻿using AuthService.Application.DTOs.Page;
 using AuthService.Application.Queries.Users.GetUsers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthService.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/users")]
     public class UsersController : ControllerBase

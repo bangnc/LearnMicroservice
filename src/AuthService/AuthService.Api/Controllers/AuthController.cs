@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using AuthService.Application.Interfaces;
-using AuthService.Application.DTOs;
-using MediatR;
-using AuthService.Application.Commands.Auth.Login;
+﻿using AuthService.Application.Commands.Auth.Login;
 using AuthService.Application.Commands.Auth.Register;
 using AuthService.Application.Commands.Auth.VerifyOtp;
+using AuthService.Application.DTOs;
+using AuthService.Application.Interfaces;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AuthService.Api.Controllers
 {
@@ -18,7 +20,7 @@ namespace AuthService.Api.Controllers
         {
             _mediator = mediator;
         }
-
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginCommand request)
         {
@@ -38,6 +40,16 @@ namespace AuthService.Api.Controllers
         {
             var result = await _mediator.Send(request);
             return Ok(result);
+        }
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult Me()
+        {
+            return Ok(new
+            {
+                UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+                Email = User.FindFirst(ClaimTypes.Email)?.Value
+            });
         }
     }
     //[ApiController]
