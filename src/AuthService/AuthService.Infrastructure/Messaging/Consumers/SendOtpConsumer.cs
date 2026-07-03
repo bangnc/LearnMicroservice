@@ -53,6 +53,7 @@ namespace AuthService.Infrastructure.Messaging.Consumers
                     while (!stoppingToken.IsCancellationRequested)
                     {
                         ConsumeResult<string, string>? result = null;
+                        Console.WriteLine("Waiting for messages...");
 
                         try
                         {

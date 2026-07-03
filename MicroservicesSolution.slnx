@@ -15,6 +15,12 @@
     <Project Path="src/AuthService/AuthService.Domain/AuthService.Domain.csproj" />
     <Project Path="src/AuthService/AuthService.Infrastructure/AuthService.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/src/FileService/">
+    <Project Path="src/FileService/FileService.Api/FileService.Api.csproj" />
+    <Project Path="src/FileService/FileService.Application/FileService.Application.csproj" />
+    <Project Path="src/FileService/FileService.Domain/FileService.Domain.csproj" />
+    <Project Path="src/FileService/FileService.Infrastructure/FileService.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/src/OrderService/">
     <Project Path="src/OrderService/OrderService.Api/OrderService.Api.csproj" />
     <Project Path="src/OrderService/OrderService.Application/OrderService.Application.csproj" />
