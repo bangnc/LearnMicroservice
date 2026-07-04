@@ -8,6 +8,7 @@ using AuthService.Domain.Entities;
 using AuthService.Domain.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
 
 namespace AuthService.Application.Handlers.Auth
@@ -19,7 +20,8 @@ namespace AuthService.Application.Handlers.Auth
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IJwtService _jwtService;
         private readonly ILoginSessionRepository _loginSessionRepository;
-       // private readonly IEmailService _emailService;
+        private readonly ILogger<LoginHandler> _logger;
+        // private readonly IEmailService _emailService;
         //private readonly IKafkaProducer _kafkaProducer;
         private readonly IEventBus _eventBus;
         public LoginHandler(
@@ -28,7 +30,8 @@ namespace AuthService.Application.Handlers.Auth
              IJwtService jwtService,
              ILoginSessionRepository loginSessionRepository,
              IUnitOfWork unitOfWork,
-             IEventBus eventBus
+             IEventBus eventBus,
+             ILogger<LoginHandler> logger
              )
         {
             _userManager = userManager;
@@ -37,14 +40,22 @@ namespace AuthService.Application.Handlers.Auth
             _loginSessionRepository = loginSessionRepository;
             _unitOfWork = unitOfWork;
             _eventBus = eventBus;
+            _logger = logger;
         }
 
         public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
+            _logger.LogInformation(
+                    "Login request received for {Email}",
+                   request.Email);
             var user = await _userManager.FindByEmailAsync(request.Email);
 
             if (user == null)
                 throw new Exception("User not found");
+
+            _logger.LogWarning(
+           "Login failed. User {Email} not found",
+           request.Email);
 
             var result = await _signInManager.CheckPasswordSignInAsync(
                 user, request.Password, false);
@@ -64,7 +75,7 @@ namespace AuthService.Application.Handlers.Auth
                 IsVerified = false,
                 AttemptCount = 0
             };
-           
+
 
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
@@ -97,7 +108,7 @@ namespace AuthService.Application.Handlers.Auth
             return new LoginResponse
             {
                 RequiresOtp = true,
-               TokenTemp = token
+                TokenTemp = token
             };
         }
     }

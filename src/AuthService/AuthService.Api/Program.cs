@@ -1,3 +1,4 @@
+using AuthService.Api.Middleware;
 using AuthService.Application;
 using AuthService.Application.Commands.Auth.Login;
 using AuthService.Domain.Entities;
@@ -8,10 +9,15 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 Console.WriteLine("After builder.Build()");
-
+// Log
+builder.Host.UseSerilog((context, services, configuration) =>
+{
+    configuration.ReadFrom.Configuration(context.Configuration);
+});
 // DB
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

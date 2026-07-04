@@ -6,6 +6,7 @@ using AuthService.Application.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
 namespace AuthService.Api.Controllers
@@ -15,15 +16,17 @@ namespace AuthService.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
-
-        public AuthController(IMediator mediator)
+        private readonly ILogger<AuthController> _logger;
+        public AuthController(IMediator mediator, ILogger<AuthController> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginCommand request)
         {
+            _logger.LogInformation("Login attempt for email: {Email}", request.Email);
             var result = await _mediator.Send(request);
             return Ok(result);
         }

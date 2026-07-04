@@ -13,9 +13,9 @@ namespace AuthService.Application.Queries.Users.GetUsers
     : IRequestHandler<GetUsersQuery, PageResponse<UserDto>>
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly IConfigurationProvider _mapperConfig;
+        private readonly AutoMapper.IConfigurationProvider _mapperConfig;
 
-        public GetUsersQueryHandler(UserManager<AppUser> userManager, IConfigurationProvider mapperConfig)
+        public GetUsersQueryHandler(UserManager<AppUser> userManager, AutoMapper.IConfigurationProvider mapperConfig)
         {
             _userManager = userManager;
             _mapperConfig = mapperConfig;
