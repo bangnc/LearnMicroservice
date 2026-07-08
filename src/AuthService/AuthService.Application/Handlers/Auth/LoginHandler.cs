@@ -63,6 +63,12 @@ namespace AuthService.Application.Handlers.Auth
             if (!result.Succeeded)
                 throw new Exception("Invalid password");
             // Sinh OTP
+            else
+            {
+                _logger.LogInformation(
+          "Login suceessfull. User {Email} found",
+          request.Email);
+            }
             var otp = OtpGenerator.Generate();
             var session = new LoginSession
             {
