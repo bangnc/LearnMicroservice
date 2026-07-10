@@ -1,0 +1,15 @@
+apiVesion: v1
+Kind: Service
+
+metadata:
+  name: authservice
+  namespace: microservices
+
+spec:
+  selector:
+    app: authservice
+  ports:
+    - protocol: TCP
+      port: 7092
+      targetPort: 7092
+  type: ClusterIP
