@@ -1,5 +1,5 @@
-apiVesion: v1
-Kind: Service
+apiVersion: v1
+kind: Service
 
 metadata:
   name: authservice
@@ -8,8 +8,10 @@ metadata:
 spec:
   selector:
     app: authservice
+
   ports:
     - protocol: TCP
       port: 7092
       targetPort: 7092
+
   type: ClusterIP
