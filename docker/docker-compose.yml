@@ -30,6 +30,7 @@ services:
 
   apigateway:
     container_name: apigateway
+    image: apigateway:latest
     build:
       context: ../src/ApiGateway
       dockerfile: ApiGateway.Api/Dockerfile
@@ -46,6 +47,7 @@ services:
 
   authservice:
     container_name: authservice
+    image: authservice:latest
     build:
       context: ../src/AuthService
       dockerfile: AuthService.Api/Dockerfile

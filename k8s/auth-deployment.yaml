@@ -21,6 +21,5 @@ spec:
       containers:
         - name: authservice
           image: authservice:latest
-          imagePullPolicy: Never
           ports:
             - containerPort: 7092

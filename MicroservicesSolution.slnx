@@ -4,8 +4,12 @@
     <File Path="nginx-deployment.yml" />
   </Folder>
   <Folder Name="/k8s/">
-    <File Path="k8s/auth-development.yaml" />
+    <File Path="apigateway-deployment.yaml" />
+    <File Path="apigateway-service.yaml" />
+    <File Path="k8s/auth-deployment.yaml" />
     <File Path="k8s/auth-service.yaml" />
+    <File Path="k8s/frontend-deployment.yaml" />
+    <File Path="k8s/frontend-service.yaml" />
   </Folder>
   <Folder Name="/shared/">
     <Project Path="shared/BuildingBlocks/BuildingBlocks.csproj" />
