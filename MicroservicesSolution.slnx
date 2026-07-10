@@ -3,9 +3,9 @@
     <File Path="docker/docker-compose.yml" />
     <File Path="nginx-deployment.yml" />
   </Folder>
-  <Folder Name="/K8s/">
-    <File Path="auth-development.yaml" />
-    <File Path="auth-service.yaml" />
+  <Folder Name="/k8s/">
+    <File Path="k8s/auth-development.yaml" />
+    <File Path="k8s/auth-service.yaml" />
   </Folder>
   <Folder Name="/shared/">
     <Project Path="shared/BuildingBlocks/BuildingBlocks.csproj" />
