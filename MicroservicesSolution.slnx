@@ -4,12 +4,15 @@
     <File Path="nginx-deployment.yml" />
   </Folder>
   <Folder Name="/k8s/">
-    <File Path="apigateway-deployment.yaml" />
-    <File Path="apigateway-service.yaml" />
+    <File Path="k8s/apigateway-deployment.yaml" />
+    <File Path="k8s/apigateway-service.yaml" />
     <File Path="k8s/auth-deployment.yaml" />
     <File Path="k8s/auth-service.yaml" />
     <File Path="k8s/frontend-deployment.yaml" />
     <File Path="k8s/frontend-service.yaml" />
+    <File Path="k8s/ingress.yaml" />
+    <File Path="k8s/kafka-config.yaml" />
+    <File Path="k8s/kafka-service.yaml" />
   </Folder>
   <Folder Name="/shared/">
     <Project Path="shared/BuildingBlocks/BuildingBlocks.csproj" />

@@ -16,6 +16,9 @@ spec:
       containers:
       - name: apigateway
         image: docker-apigateway:latest
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 7058

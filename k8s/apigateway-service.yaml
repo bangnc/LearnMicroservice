@@ -8,5 +8,5 @@ spec:
     app: apigateway
   ports:
   - port: 80
-    targetPort: 7058
-  type: NodePort
+    targetPort: 8080
+  type: ClusterIP
