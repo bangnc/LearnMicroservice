@@ -38,7 +38,7 @@ builder.Services
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
-builder.Services.AddControllers(); // 👈 thiếu cái này
+builder.Services.AddControllers(); 
 
 var allowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")
@@ -50,7 +50,7 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(allowedOrigins!)
               .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowCredentials(); // nếu dùng cookie
+              .AllowCredentials(); 
     });
 });
 
