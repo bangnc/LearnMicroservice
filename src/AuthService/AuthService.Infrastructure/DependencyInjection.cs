@@ -7,12 +7,15 @@ using AuthService.Infrastructure.Messaging.EventBus;
 using AuthService.Infrastructure.Messaging.Handlers;
 using AuthService.Infrastructure.Persistence;
 using AuthService.Infrastructure.Persistence.Configurations;
+using AuthService.Infrastructure.Redis;
 using AuthService.Infrastructure.Repositories;
 using AuthService.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using StackExchange.Redis;
 using System.Text;
 
 namespace AuthService.Infrastructure
@@ -42,10 +45,22 @@ namespace AuthService.Infrastructure
 
             services.AddScoped<SendOtpHandler>();
 
+            services.AddHostedService<OutboxProcessor>();
+
             services.AddHostedService<SendOtpConsumer>();
+
+            // Redis
+            var connectionString =
+            configuration.GetConnectionString("Redis");
+            services.AddSingleton<IConnectionMultiplexer>(
+                ConnectionMultiplexer.Connect(
+                    connectionString!));
+
+            services.AddScoped<IRedisService, RedisService>();
 
             // Repositories
             services.AddScoped<ILoginSessionRepository, LoginSessionRepository>();
+            services.AddScoped<IOutboxRepository, OutboxRepository>();
 
             return services;
         }

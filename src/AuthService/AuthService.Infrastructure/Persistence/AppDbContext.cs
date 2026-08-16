@@ -13,6 +13,7 @@ namespace AuthService.Infrastructure.Persistence
         }
         public DbSet<Unit> Units { get; set; }
         public DbSet<LoginSession> LoginSessions { get; set; }
+        public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -20,7 +20,11 @@ namespace AuthService.Infrastructure.Messaging.EventBus
         {
             var config = new ProducerConfig
             {
-                BootstrapServers = configuration["Kafka:BootstrapServers"]
+                BootstrapServers = configuration["Kafka:BootstrapServers"],
+                MessageTimeoutMs = 3000,
+                RequestTimeoutMs = 1000,
+                SocketTimeoutMs = 1000,
+                MessageSendMaxRetries = 0
             };
 
             _producer = new ProducerBuilder<string, string>(config).Build();

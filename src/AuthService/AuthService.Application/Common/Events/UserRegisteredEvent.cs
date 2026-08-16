@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace AuthService.Application.Common.Events
 {
-    public sealed class UserRegisteredEvent
+    public class UserRegisteredIntegrationEvent
     {
-        public string UserId { get; init; } = "";
+        public string UserId { get; set; } = default!;
 
-        public string Email { get; init; } = "";
+        public string Email { get; set; } = default!;
 
-        public string FullName { get; init; } = "";
+        public string FullName { get; set; } = default!;
     }
 }
