@@ -1,0 +1,28 @@
+
+name: Docker CI
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Check repository files
+        run: |
+          pwd
+          ls -la
+          find src -name Dockerfile
+
+      - name: Validate Docker Compose
+        run: docker compose -f docker/docker-compose.yml config
+
+      - name: Build Docker images
+        run: docker compose -f docker/docker-compose.yml build
