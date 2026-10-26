@@ -37,10 +37,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
 
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
+           
+            
         };
+        //options.Authority = builder.Configuration["Jwt:Authority"];
+        //options.Audience = builder.Configuration["Jwt:Audience"];
     });
 
+//builder.Services.AddAuthorization(options =>
+//{
+//    options.AddPolicy("UsersRead", policy =>
+//    {
+//        policy.RequireClaim("scope", "users.read");
+//    });
+//});
 builder.Services.AddAuthorization();
 
 builder.Services.AddCors(options =>
