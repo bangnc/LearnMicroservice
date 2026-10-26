@@ -1,11 +1,15 @@
 
-name: Docker CI
+name: Docker CI CD
 
 on:
   push:
     branches: [dev, main]
   pull_request:
     branches: [dev, main]
+
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   docker-build:
@@ -25,4 +29,36 @@ jobs:
         run: docker compose -f docker/docker-compose.yml config
 
       - name: Build Docker images
+        if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main'
         run: docker compose -f docker/docker-compose.yml build
+
+      - name: Login to GHCR
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set lowercase image owner
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: owner
+        run: echo "name=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push ApiGateway
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src/ApiGateway
+          file: ./src/ApiGateway/ApiGateway.Api/Dockerfile
+          push: true
+          tags: ghcr.io/${{ steps.owner.outputs.name }}/learnmicroservice-apigateway:latest
+
+      - name: Build and push AuthService
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src/AuthService
+          file: ./src/AuthService/AuthService.Api/Dockerfile
+          push: true
+          tags: ghcr.io/${{ steps.owner.outputs.name }}/learnmicroservice-authservice:latest
