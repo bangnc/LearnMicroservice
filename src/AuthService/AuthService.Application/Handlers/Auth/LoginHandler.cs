@@ -96,15 +96,15 @@ namespace AuthService.Application.Handlers.Auth
                 throw;
             }
             var token = _jwtService.CreateTempToken(user, session.SessionId);
-            await _eventBus.PublishAsync(
-            KafkaTopics.SendOtp,
-            new SendOtpEmailIntegrationEvent
-            {
-                Email = user.Email!,
-                FullName = user.FullName ?? "",
-                Otp = otp
-            },
-            cancellationToken);
+            //await _eventBus.PublishAsync(
+            //KafkaTopics.SendOtp,
+            //new SendOtpEmailIntegrationEvent
+            //{
+            //    Email = user.Email!,
+            //    FullName = user.FullName ?? "",
+            //    Otp = otp
+            //},
+            //cancellationToken);
 
 
             //await _emailService.SendOtpAsync(
