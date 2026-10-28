@@ -14,13 +14,15 @@ namespace FileService.Application.Services
     {
         private readonly IFileRepository _repository;
         private readonly IStorageService _storageService;
-
+        private readonly IUserGrpcClient _userGrpcClient;
         public FileManagementService(
             IFileRepository repository,
-            IStorageService storageService)
+            IStorageService storageService,
+            IUserGrpcClient userGrpcClient)
         {
             _repository = repository;
             _storageService = storageService;
+            _userGrpcClient = userGrpcClient;
         }
 
         public async Task<FileResponse> UploadAsync(UploadFileRequest request)
@@ -30,6 +32,13 @@ namespace FileService.Application.Services
             if (file == null || file.Length == 0)
                 throw new Exception("File không hợp lệ.");
 
+            var user = await _userGrpcClient.GetUserAsync( Guid.NewGuid());
+
+            if (user is null)
+                throw new InvalidOperationException("Không tìm thấy user.");
+
+            if (!user.IsActive)
+                throw new InvalidOperationException("User đã bị vô hiệu hóa.");
             // Sinh tên file mới
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
 

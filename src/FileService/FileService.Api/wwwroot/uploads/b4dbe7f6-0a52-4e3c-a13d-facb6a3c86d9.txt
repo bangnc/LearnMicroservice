@@ -1,0 +1,28 @@
+Cai: dotnet-hosting-8.0.28-win
+Application Pools. .Net CRL version : No Managed Code 
+Managed Pipeline Mode: Intergrated
+phải có config trong @bean: tự tạo object để dependency
+@service là tự tạo object do spring
+
+src/main/java
+│
+├── entity
+│   ├── Student.java
+│   ├── Department.java
+│   ├── Course.java
+│   └── Address.java
+│
+├── enums
+│   └── Gender.java
+│
+├── repository
+├── service
+├── controller
+└── dto
+27/10
+--OpenTelemetry
+--Aspire
+
+Kafka se save event truoc khi publisher
+Sau do co the retry
+Consumer se check event_id tranh trung lap nhieu lan

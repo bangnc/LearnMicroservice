@@ -1,0 +1,20 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "AuthService.Grpc";
+
+package user;
+
+service UserGrpc {
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+}
+
+message GetUserRequest {
+  string userId = 1;
+}
+
+message GetUserResponse {
+  string userId = 1;
+  string fullName = 2;
+  bool isActive = 3;
+  bool found = 4;
+}

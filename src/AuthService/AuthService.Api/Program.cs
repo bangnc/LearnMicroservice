@@ -3,6 +3,7 @@ using AuthService.Application;
 using AuthService.Application.Commands.Auth.Login;
 using AuthService.Domain.Entities;
 using AuthService.Infrastructure;
+using AuthService.Infrastructure.GrpcServices;
 using AuthService.Infrastructure.Persistence;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -31,7 +32,6 @@ builder.Services
         .AddHttpClientInstrumentation()
         .AddRuntimeInstrumentation()
         .AddOtlpExporter());
-
 
 Console.WriteLine("After builder.Build()");
 // Log
@@ -109,6 +109,7 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 var app = builder.Build();
+app.MapGrpcService<UserGrpcService>();
 app.UseCors("Vue");
 
 // Configure the HTTP request pipeline.

@@ -2,6 +2,7 @@
 using AuthService.Application.Interfaces;
 using AuthService.Application.Services;
 using AuthService.Domain.Interfaces;
+using AuthService.Infrastructure.GrpcServices;
 using AuthService.Infrastructure.Messaging.Consumers;
 using AuthService.Infrastructure.Messaging.EventBus;
 using AuthService.Infrastructure.Messaging.Handlers;
@@ -10,6 +11,7 @@ using AuthService.Infrastructure.Persistence.Configurations;
 using AuthService.Infrastructure.Redis;
 using AuthService.Infrastructure.Repositories;
 using AuthService.Infrastructure.Services;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.Extensions.Configuration;
@@ -61,7 +63,9 @@ namespace AuthService.Infrastructure
             // Repositories
             services.AddScoped<ILoginSessionRepository, LoginSessionRepository>();
             services.AddScoped<IOutboxRepository, OutboxRepository>();
-
+            //
+            services.AddGrpc();
+  
             return services;
         }
 
